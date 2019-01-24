@@ -1,0 +1,11 @@
+<VirtualHost *:80>
+
+  ServerAdmin webmaster@localhost
+
+  ProxyPass / http://127.0.0.1:55414/
+  ProxyPassReverse / http://127.0.0.1:55414/
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>

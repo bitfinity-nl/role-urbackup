@@ -1,0 +1,29 @@
+---
+  # Title: Urbackup
+  #
+  # Author: bitfinity.nl
+  # File: tasks/main.yml
+  #
+  # Description:
+  #   Backup server
+
+  - name: "Type:Server, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
+    import_tasks: ubt-1804-amd64-server.yml
+    when:
+      - ansible_distribution_version == '18.04'
+      - ansible_architecture == 'x86_64'
+      - ubk_ubt_srv_state == 'enabled'
+  
+  - name: "Type:Client, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
+    import_tasks: ubt-1804-amd64-agent.yml
+    when:
+      - ansible_distribution_version == '18.04'
+      - ansible_architecture == 'x86_64'
+      - ubk_ubt_cli_state == 'enabled'
+
+ # - name: "Type:Client, For OS: Windows, Arch: amd64, State: Enabled"
+ #   import_tasks: win-amd64-agent.yml
+ #   when:
+ #     - ansible_distribution_version == '18.04'
+ #     - ansible_architecture == 'x86_64'
+ #     - ubk_ubt_cli_state == 'enabled'

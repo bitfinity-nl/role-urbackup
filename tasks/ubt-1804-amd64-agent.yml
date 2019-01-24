@@ -1,0 +1,82 @@
+---
+  # Title: Urbackup Ubuntu 18.04LTS Client
+  #
+  # Author: bitfinity.nl
+  # File: tasks/ubt-1804-amd64-agent.yml
+  #
+  # Description:
+  #   Backup server
+
+  - name: "Install packages"
+    apt:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - expect
+
+  - name: "Check if urbackup client already is installed"
+    stat:
+      path: /usr/local/bin/urbackupclientctl
+    register: urbackup_isinstalled
+
+  - name: "Print to screen if client is allready installed"
+    debug:
+      msg: "{{ urbackup_isinstalled.stat.exists }}"
+
+  - name: "Transfer awnser scripts to /tmp/"
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0755
+    with_items:
+      - { src: 'ubt-1804-client/awnser-script.sh.j2', dest: '/tmp/awnser-script.sh' }
+    when: 
+      - urbackup_isinstalled.stat.exists == false
+
+  - name: "Download Urbackup client install script"
+    get_url:
+      url: "{{ ubk_ubt_cli_install_url }}"
+      dest: /tmp/urbackup-client.sh
+      mode: 0755
+    when: 
+      - urbackup_isinstalled.stat.exists == false 
+  
+  - name: "Execute installer"
+    command: /tmp/urbackup-client.sh
+    when: 
+      - urbackup_isinstalled.stat.exists == false
+  
+  - name: "Cleanup files"
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - /tmp/awnser-script.sh
+      - /tmp/urbackup-client.sh
+  
+  - name: "Set folderś to backup with snapshot"
+    command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
+    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+    when: 
+      - urbackup_isinstalled.stat.exists == false
+      - item.snapshot == 'true'
+  
+  - name: "Set folderś to backup without snapshot"
+    command: "/usr/local/bin/urbackupclientctl add-backupdir -d {{ item.src }}"
+    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+    when: 
+      - urbackup_isinstalled.stat.exists == false
+      - item.snapshot == 'false'
+
+  - name: "ufw allow traffic on specific ports"
+    ufw:
+      rule: allow
+      port: "{{ item.port }}"
+      proto: "{{ item.proto }}"
+    with_items:
+      - { port: '35621', proto: 'tcp' }
+      - { port: '35622', proto: 'udp' }
+      - { port: '35623', proto: 'tcp' }

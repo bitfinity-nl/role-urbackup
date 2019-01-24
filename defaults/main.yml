@@ -1,0 +1,34 @@
+---
+  # Title: Urbackup
+  #
+  # Author: Luc Rutten
+  # File: defaults/main.yml
+  #
+  # Description:
+  #   Backup server
+
+  # -- Backup server setting --
+  #
+  # Variable(s):
+  #   ubk_srv_state: 'enabled' or 'disabled'        # Whether Urbackup server wil be installed or not. Default=disabled 
+  #
+  ubk_ubt_srv_state: 'disabled'
+  
+  # -- UrBackup Ubuntu Client settings --
+  #
+  # Variable(s):
+  #   ubk_cli_state         : 'enabled' or 'disabled'   # Whether Urbackup server wil be installed or not, Default=enabled. 
+  #   ubk_cli_snapshot_mech : '2'                       # Snapshot mechanism (see urbackup documentation), Default=2 (LVM) or 4 (no snapshot).      
+  #   ubk_ubt_cli_backupdirs:                           # Path to backup (every path on a seperate line).  
+  #     - { snapshot: 'false', src: '/opt' }            # Backup directory without snapshot snapshot: 'false'.
+  #     - { snapshot: 'true', src: '/home' }            # Backup directory with snapshot (snapshot: 'true')
+  #
+  # Note:
+  #   - uninstall before adding new paths: /usr/local/sbin/uninstall_urbackupclient
+  #     
+  ubk_ubt_cli_state          : 'enabled'
+  ubk_ubt_cli_install_url    : 'https://hndl.urbackup.org/Client/2.3.4/UrBackup%20Client%20Linux%202.3.4.sh'
+  ubk_ubt_cli_snapshot_mech  : '2'
+  ubk_ubt_cli_backupdirs     : 
+    - { snapshot: 'false', src: '/opt' }
+    - { snapshot: 'true', src: '/home' } 

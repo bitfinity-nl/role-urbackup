@@ -1,0 +1,27 @@
+<IfModule mod_ssl.c>
+  
+  <VirtualHost _default_:443>
+	ServerAdmin {{ ap_serveradmin }}
+
+    ProxyPass / http://127.0.0.1:55414/
+    ProxyPassReverse / http://127.0.0.1:55414/
+
+	SSLEngine on
+	SSLCertificateFile	{{ ap_sslcertificatefile }}
+	SSLCertificateKeyFile {{ ap_sslcertificatekeyfile }}
+    SSLCertificateChainFile {{ ap_sslcertificatechainfile }}        
+   
+	<FilesMatch "\.(cgi|shtml|phtml|php)$">
+		SSLOptions +StdEnvVars
+	</FilesMatch>
+	<Directory /usr/lib/cgi-bin>
+		SSLOptions +StdEnvVars
+	</Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+  </VirtualHost>
+</IfModule>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet

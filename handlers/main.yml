@@ -1,0 +1,13 @@
+---
+  # Title: Urbackup
+  #
+  # Author: bitfinity.nl
+  # File: handlers/main.yml
+  #
+  # Description:
+  #   Backup server
+
+  - name: restart_apache
+    systemd:
+      name: apache2
+      state: restarted
