@@ -60,11 +60,30 @@
     notify:
       - restart_apache
   
-  - name: "Disable default sites and enable UrBackup site"
+  - name: "Enable http on default site"
     command: "a2ensite {{ item }}"
     with_items:
       - urbackup.conf
+    when:
+      - ubk_ubt_srv_cert_state == 'disabled'
+    notify:
+      - restart_apache
+
+  - name: "Disable http on default site"
+    command: "a2dissite {{ item }}"
+    with_items:
+      - urbackup.conf
+    when:
+      - ubk_ubt_srv_cert_state == 'enabled'
+    notify:
+      - restart_apache
+
+  - name: "Enable https on default site"
+    command: "a2ensite {{ item }}"
+    with_items:
       - urbackup-ssl.conf
+    when:
+      - ubk_ubt_srv_cert_state == 'enabled'
     notify:
       - restart_apache
 

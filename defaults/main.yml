@@ -10,9 +10,20 @@
   # -- Backup server setting --
   #
   # Variable(s):
-  #   ubk_srv_state: 'enabled' or 'disabled'        # Whether Urbackup server wil be installed or not. Default=disabled 
+  #   ubk_srv_state               : 'disabled' or 'enabled'                            # Whether Urbackup server wil be installed or not. Default=disabled 
+  #   ubk_ubt_srv_cert_state      : 'disabled' or 'enabled'                            # Whether Urbackup server uses https for the frontend. Default=disabled
+  #   ubk_ubt_srv_serveradmin     : 'support@example.com'                              # Webmaster mail address
+  #   ubk_ubt_srv_cert_file       : '/etc/letsencrypt/live/example.com/cert2.pem'      # Path to certficate
+  #   ubk_ubt_srv_cert_key_file   : '/etc/letsencrypt/live/example.com/privkey2.pem'   # Path to keyfile
+  #   ubk_ubt_srv_cert_chain_file : '/etc/letsencrypt/live/example.com/privkey2.pem'   # Path to chainfile
   #
-  ubk_ubt_srv_state: 'disabled'
+  ubk_ubt_srv_state           : 'disabled'
+  ubk_ubt_srv_cert_state      : 'enabled'
+  ubk_ubt_srv_serveradmin     : 'support@example.com'
+  ubk_ubt_srv_cert_file       : '{{ ap_sslcertificatefile }}'
+  ubk_ubt_srv_cert_key_file   : '{{ ap_sslcertificatekeyfile }}'
+  ubk_ubt_srv_cert_chain_file : '{{ ap_sslcertificatechainfile }}'
+
   
   # -- UrBackup Ubuntu Client settings --
   #

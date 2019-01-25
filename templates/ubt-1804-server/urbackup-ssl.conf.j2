@@ -1,15 +1,31 @@
+  <VirtualHost *:80>
+
+    ServerAdmin {{ ubk_ubt_srv_serveradmin }}
+
+    ProxyPass / http://127.0.0.1:55414/
+    ProxyPassReverse / http://127.0.0.1:55414/
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    RewriteEngine on
+ #   RewriteCond %{SERVER_NAME} =docs.example.com
+    RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,QSA,R=permanent]
+ 
+  </VirtualHost>
+
 <IfModule mod_ssl.c>
-  
+
   <VirtualHost _default_:443>
-	ServerAdmin {{ ap_serveradmin }}
+	ServerAdmin {{ ubk_ubt_srv_serveradmin }}
 
     ProxyPass / http://127.0.0.1:55414/
     ProxyPassReverse / http://127.0.0.1:55414/
 
 	SSLEngine on
-	SSLCertificateFile	{{ ap_sslcertificatefile }}
-	SSLCertificateKeyFile {{ ap_sslcertificatekeyfile }}
-    SSLCertificateChainFile {{ ap_sslcertificatechainfile }}        
+	SSLCertificateFile	{{ ubk_ubt_srv_cert_file }}
+	SSLCertificateKeyFile {{ ubk_ubt_srv_cert_key_file }}
+    SSLCertificateChainFile {{ ubk_ubt_srv_cert_chain_file }}        
    
 	<FilesMatch "\.(cgi|shtml|phtml|php)$">
 		SSLOptions +StdEnvVars

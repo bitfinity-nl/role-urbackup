@@ -1,6 +1,6 @@
 <VirtualHost *:80>
 
-  ServerAdmin webmaster@localhost
+  ServerAdmin {{ ubk_ubt_srv_serveradmin }}
 
   ProxyPass / http://127.0.0.1:55414/
   ProxyPassReverse / http://127.0.0.1:55414/
