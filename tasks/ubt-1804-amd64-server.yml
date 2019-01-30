@@ -7,6 +7,13 @@
   # Description:
   #   Backup server
 
+  - name: "Create directory structure"
+    file:
+      path: "{{ item }}"
+      state: directory
+    with_items:
+      - "{{ ubk_ubt_srv_backup_path }}"
+
   - name: "Add repository"
     apt_repository:
       repo: ppa:uroni/urbackup
@@ -30,6 +37,7 @@
       - proxy
       - proxy_http
       - proxy_ajp
+      - proxy_fcgi
       - rewrite
       - deflate
       - headers
@@ -77,6 +85,16 @@
       - ubk_ubt_srv_cert_state == 'enabled'
     notify:
       - restart_apache
+  
+  - name: "Disable https on default site"
+    command: "a2ensite {{ item }}"
+    with_items:
+      - urbackup-ssl.conf
+    when:
+      - ubk_ubt_srv_cert_state == 'disabled'
+    notify:
+      - restart_apache
+
 
   - name: "Enable https on default site"
     command: "a2ensite {{ item }}"

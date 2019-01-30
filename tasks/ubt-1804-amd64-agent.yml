@@ -13,7 +13,7 @@
       state: present
     vars:
       packages:
-      - expect
+      - python-pexpect
 
   - name: "Check if urbackup client already is installed"
     stat:
@@ -44,11 +44,20 @@
     when: 
       - urbackup_isinstalled.stat.exists == false 
   
+#  - name: "Execute installer"
+#    command: /tmp/urbackup-client.sh
+#    when: 
+#      - urbackup_isinstalled.stat.exists == false
+
   - name: "Execute installer"
-    command: /tmp/urbackup-client.sh
-    when: 
-      - urbackup_isinstalled.stat.exists == false
-  
+    expect:
+      command: /bin/bash -c "/tmp/urbackup-client.sh" | grep else
+      responses:
+        Question:
+          - "Y"
+          - "2"
+
+
   - name: "Cleanup files"
     file:
       path: "{{ item }}"
@@ -64,7 +73,7 @@
       - urbackup_isinstalled.stat.exists == false
       - item.snapshot == 'true'
   
-  - name: "Set folderś to backup without snapshot"
+  - name: "Set folders to backup without snapshot"
     command: "/usr/local/bin/urbackupclientctl add-backupdir -d {{ item.src }}"
     with_items: "{{ ubk_ubt_cli_backupdirs }}"
     when: 

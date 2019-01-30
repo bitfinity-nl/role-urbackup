@@ -2,8 +2,8 @@
 
     ServerAdmin {{ ubk_ubt_srv_serveradmin }}
 
-    ProxyPass / http://127.0.0.1:55414/
-    ProxyPassReverse / http://127.0.0.1:55414/
+    ProxyPass / http://localhost:55414/
+    ProxyPassReverse / http://localhost:55414/
 
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
@@ -17,25 +17,39 @@
 <IfModule mod_ssl.c>
 
   <VirtualHost _default_:443>
-	ServerAdmin {{ ubk_ubt_srv_serveradmin }}
+	  ServerAdmin {{ ubk_ubt_srv_serveradmin }}
 
-    ProxyPass / http://127.0.0.1:55414/
-    ProxyPassReverse / http://127.0.0.1:55414/
+    <Proxy *>
+        Order deny,allow
+        Allow from all
+    </Proxy>
 
-	SSLEngine on
-	SSLCertificateFile	{{ ubk_ubt_srv_cert_file }}
-	SSLCertificateKeyFile {{ ubk_ubt_srv_cert_key_file }}
+    ProxyRequests Off
+    ProxyPreserveHost On
+    ProxyPass / http://localhost:55414/
+    ProxyPassReverse / http://localhost:55414/
+
+	  SSLEngine on
+	  SSLCertificateFile	{{ ubk_ubt_srv_cert_file }}
+	  SSLCertificateKeyFile {{ ubk_ubt_srv_cert_key_file }}
     SSLCertificateChainFile {{ ubk_ubt_srv_cert_chain_file }}        
    
-	<FilesMatch "\.(cgi|shtml|phtml|php)$">
-		SSLOptions +StdEnvVars
-	</FilesMatch>
-	<Directory /usr/lib/cgi-bin>
-		SSLOptions +StdEnvVars
-	</Directory>
+	  <FilesMatch "\.(cgi|shtml|phtml|php)$">
+		  SSLOptions +StdEnvVars
+	  </FilesMatch>
+
+	  <Directory /usr/lib/cgi-bin>
+		  SSLOptions +StdEnvVars
+	  </Directory>
+
+    <Directory /var/www/html/urbackup>
+      Options +FollowSymLinks +ExecCGI -Indexes -MultiViews
+      AllowOverride none
+      Require all granted
+    </Directory>
 
     ErrorLog ${APACHE_LOG_DIR}/error.log
-	CustomLog ${APACHE_LOG_DIR}/access.log combined
+	  CustomLog ${APACHE_LOG_DIR}/access.log combined
 
   </VirtualHost>
 </IfModule>

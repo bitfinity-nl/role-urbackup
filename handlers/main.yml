@@ -11,3 +11,9 @@
     systemd:
       name: apache2
       state: restarted
+  
+  - name: "enable_start_ubt_urbackupclient"
+    systemd:
+       name: urbackupclientbackend
+       state: started
+       enabled: yes

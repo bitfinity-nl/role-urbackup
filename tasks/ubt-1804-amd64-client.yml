@@ -1,0 +1,90 @@
+---
+  # Title: Urbackup Ubuntu 18.04LTS Client
+  #
+  # Author: bitfinity.nl
+  # File: tasks/ubt-1804-amd64-agent-src.yml
+  #
+  # Description:
+  #   Backup server
+
+  - name: "Install packages"
+    apt:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - build-essential
+      - g++
+      - libwxgtk3.0-dev
+      - libcrypto++-dev
+      - libz-dev
+
+  - name: "Download client source"
+    unarchive:
+      src: "{{ ubk_ubt_cli_src }}"
+      dest: /tmp/
+      remote_src: yes
+
+  - name: "Change directory"
+    shell: mv /tmp/urbackup-client-* /tmp/urbackup-client
+
+  - name: "Transfer template to /tmp/urbackup-client"
+    template:
+      src: ubt-1804-client/build.sh.j2
+      dest: "/tmp/urbackup-client/build.sh"
+      owner: root
+      group: root
+      mode: 0755
+  
+  - name: "Execute /tmp/urbackup-client/build.sh/build.sh script"
+    command: /tmp/urbackup-client/build.sh
+
+  - name: "Create systemservice"
+    template:
+      src: ubt-1804-client/urbackupclientbackend.service.j2
+      dest: /lib/systemd/system/urbackupclientbackend.service
+      owner: root
+      group: root
+      mode: 0755
+    notify: enable_start_ubt_urbackupclient
+
+  - name: "Set snapshot mechanism to nosnapshot"
+    file:
+      path: /usr/local/etc/urbackup/snapshot.cfg
+      state: absent
+    when:
+      - ubk_ubt_cli_snapshot_mech == "nosnapshot"
+
+  - name: "Set snapshot mechanism to lvm"
+    template:
+      src: ubt-1804-client/snapshot-lvm.cfg.j2
+      dest: /usr/local/etc/urbackup/snapshot.cfg
+      owner: root
+      group: root
+      mode: 0700
+    when:
+      - ubk_ubt_cli_snapshot_mech == "lvm"
+
+  - name: "Set folderś to backup with snapshot"
+    command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
+    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+    when: 
+      - ubk_ubt_cli_snapshot_mech == 'lvm' 
+      # - urbackup_isinstalled.stat.exists == false
+      - item.snapshot == 'true'
+  
+  - name: "Set folders to backup without snapshot"
+    command: "/usr/local/bin/urbackupclientctl add-backupdir -d {{ item.src }}"
+    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+    when: 
+      - ubk_ubt_cli_snapshot_mech == 'nosnapshot' and
+        item.snapshot == 'false' or
+        ubk_ubt_cli_snapshot_mech == 'lvm'
+      # - urbackup_isinstalled.stat.exists == false
+      #- item.snapshot == 'false'
+
+  - name: "Cleanup temporary directory"
+    file:
+      path: /tmp/urbackup-client
+      state: absent
+

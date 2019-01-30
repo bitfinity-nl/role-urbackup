@@ -2,10 +2,21 @@
 
   ServerAdmin {{ ubk_ubt_srv_serveradmin }}
 
+  <Proxy *>
+     Order deny,allow
+     Allow from all
+  </Proxy>
+
   ProxyPass / http://127.0.0.1:55414/
   ProxyPassReverse / http://127.0.0.1:55414/
 
   ErrorLog ${APACHE_LOG_DIR}/error.log
   CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+  <Directory /var/www/html/urbackup>
+    Options +FollowSymLinks +ExecCGI -Indexes -MultiViews
+    AllowOverride none
+    Require all granted
+  </Directory>
 
 </VirtualHost>
