@@ -15,7 +15,6 @@
       - ubk_ubt_srv_state == 'enabled'
   
   - name: "Type:Client, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
-    # import_tasks: ubt-1804-amd64-agent.yml
     import_tasks: ubt-1804-amd64-client.yml
     when:
       - ansible_distribution_version == '18.04'

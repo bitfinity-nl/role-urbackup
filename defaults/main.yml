@@ -41,5 +41,5 @@
   ubk_ubt_cli_src            : 'https://hndl.urbackup.org/Client/2.3.4/urbackup-client-2.3.4.tar.gz'
   ubk_ubt_cli_snapshot_mech  : 'lvm'
   ubk_ubt_cli_backupdirs     : 
-    - { snapshot: 'false', src: '/opt' }
-    - { snapshot: 'false', src: '/home' } 
+    - { snapshot: 'true', src: '/opt' }
+    - { snapshot: 'true', src: '/home' } 

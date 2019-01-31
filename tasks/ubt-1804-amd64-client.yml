@@ -65,23 +65,31 @@
     when:
       - ubk_ubt_cli_snapshot_mech == "lvm"
 
-  - name: "Set folderś to backup with snapshot"
-    command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
-    with_items: "{{ ubk_ubt_cli_backupdirs }}"
-    when: 
-      - ubk_ubt_cli_snapshot_mech == 'lvm' 
+#  - name: "Set folderś to backup with snapshot"
+#    command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
+#    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+#    when: 
+#      - ubk_ubt_cli_snapshot_mech == 'lvm' 
       # - urbackup_isinstalled.stat.exists == false
-      - item.snapshot == 'true'
+#      - item.snapshot == 'true'
   
-  - name: "Set folders to backup without snapshot"
-    command: "/usr/local/bin/urbackupclientctl add-backupdir -d {{ item.src }}"
-    with_items: "{{ ubk_ubt_cli_backupdirs }}"
-    when: 
-      - ubk_ubt_cli_snapshot_mech == 'nosnapshot' and
-        item.snapshot == 'false' or
-        ubk_ubt_cli_snapshot_mech == 'lvm'
+#  - name: "Set folders to backup without snapshot"
+#    command: "/usr/local/bin/urbackupclientctl add-backupdir -d {{ item.src }}"
+#    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+#    when: 
+#      - ubk_ubt_cli_snapshot_mech == 'nosnapshot' and
+#        item.snapshot == 'false' or
+#        ubk_ubt_cli_snapshot_mech == 'lvm'
       # - urbackup_isinstalled.stat.exists == false
       #- item.snapshot == 'false'
+
+
+#  - name: "Transfer templates to {{ ansible_hostname }}"
+#    template:
+#      src: "{{ item.src }}"
+#      dest: "{{ item.dest }}"
+#    with_items:
+#      - { src: 'ubt-1804-client/pw_change.txt', dest: '/usr/local/var/urbackup/pw_change.txt' }
 
   - name: "Cleanup temporary directory"
     file:
