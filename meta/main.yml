@@ -1,0 +1,14 @@
+galaxy_info:
+  author: L. Rutten
+  description: UrBackup is an easy to setup Open Source client/server backup system
+  company: Bitfinity-NL
+  license: GPLv3
+  min_ansible_version: 2.7
+  platforms:
+  - name: Ubuntu
+    versions:
+    - bionic
+  galaxy_tags:
+    - ubuntu
+    - backup
+    - linux

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e
+
+SNAP_ID=$1
+SNAP_MOUNTPOINT="$2"
+SNAP_NAME="$3"
+SNAP_ORIG_PATH="$4"
+
+CDIR=`dirname $0`
+. $CDIR/filesystem_snapshot_common
+exit_exclude_snapshot_mountpoints "$SNAP_MOUNTPOINT"
+
+set_filesystem_type "${SNAP_MOUNTPOINT}"
+
+if [[ $TYPE == "" ]]
+then
+        if btrfs subvolume list -o "$SNAP_MOUNTPOINT" > /dev/null 2>&1
+        then
+                TYPE="btrfs"
+        fi
+fi
+
+if [[ $TYPE == "btrfs" ]]
+then
+        mkdir -p "$SNAP_MOUNTPOINT/.urbackup_snaps"
+        SNAP_DEST="$SNAP_MOUNTPOINT/.urbackup_snaps/$SNAP_ID"
+        btrfs subvolume snapshot -r "$SNAP_MOUNTPOINT" "$SNAP_DEST"
+else
+        echo "Cannot create snapshot of file system with type $TYPE"
+        exit 1
+fi
+
+echo "SNAPSHOT=$SNAP_DEST"
+
+exit 0

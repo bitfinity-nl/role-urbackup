@@ -28,18 +28,19 @@
   # -- UrBackup Ubuntu Client settings --
   #
   # Variable(s):
-  #   ubk_cli_state         : 'enabled' or 'disabled'   # Whether Urbackup server wil be installed or not, Default=enabled. 
-  #   ubk_cli_snapshot_mech : 'lvm'                       # Snapshot mechanism (see urbackup documentation), Default=2 (LVM) or 4 (no snapshot).      
-  #   ubk_ubt_cli_backupdirs:                           # Path to backup (every path on a seperate line).  
-  #     - { snapshot: 'false', src: '/opt' }            # Backup directory without snapshot snapshot: 'false'.
-  #     - { snapshot: 'true', src: '/home' }            # Backup directory with snapshot (snapshot: 'true')
+  #   ubk_ubt_cli_state         : 'enabled' or 'disabled'                                                # Whether Urbackup server wil be installed or not, Default=disabled. 
+  #   ubk_ubt_cli_src           : 'https://hndl.urbackup.org/Client/2.3.4/urbackup-client-2.3.4.tar.gz'  # Download url where the source can be found.
+  #   ubk_ubt_cli_snapshot_mech : 'lvm'                                                                  # Snapshot mechanism (see urbackup documentation) set to nosnapshot/lvm/btrfs/dattobd, Default=nosnapshot.      
+  #   ubk_ubt_cli_backupdirs    :                                                                        # Path to backup (every path on a seperate line).  
+  #     - { snapshot: 'false', src: '/opt' }                                                             # Backup directory without snapshot snapshot: 'false'.
+  #     - { snapshot: 'true', src: '/home' }                                                             # Backup directory with snapshot (snapshot: 'true')
   #
   # Note:
   #   - uninstall before adding new paths: /usr/local/sbin/uninstall_urbackupclient
   #     
-  ubk_ubt_cli_state          : 'enabled'
+  ubk_ubt_cli_state          : 'disabled'
   ubk_ubt_cli_src            : 'https://hndl.urbackup.org/Client/2.3.4/urbackup-client-2.3.4.tar.gz'
-  ubk_ubt_cli_snapshot_mech  : 'lvm'
+  ubk_ubt_cli_snapshot_mech  : 'nosnapshot'
   ubk_ubt_cli_backupdirs     : 
-    - { snapshot: 'true', src: '/opt' }
-    - { snapshot: 'true', src: '/home' } 
+    - { snapshot: 'false', src: '/opt' }
+    - { snapshot: 'false', src: '/home' } 
