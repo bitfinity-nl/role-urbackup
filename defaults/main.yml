@@ -44,3 +44,25 @@
   ubk_ubt_cli_backupdirs     : 
     - { snapshot: 'false', src: '/opt' }
     - { snapshot: 'false', src: '/home' } 
+
+
+  # -- UrBackup Windows Client settings --
+  #
+  # Variable(s)
+  #   ubk_win_cli_state            : 'enabled' or 'disabled'                                 # Whether the application should be installed or removed (present=install, absent=removed).
+  #   ubk_win_cli_pkg_name         : '7zip1805-x64'                                        # Name of the application.
+  #   ubk_win_cli_pkg_arch         : '32bit' or '64bit'                                    # Whether the application is a 32bit or a 64bit application.
+  #   ubk_win_cli_pkg_repo_local   : 'c:\ProgramData\ansible\cached\{{ pkg_name }}'        # Local path to package (Do not change).
+  #   ubk_win_cli_pkg_repo_remote  : 'http://dl.example.com/resource/7zip/7z1805-x64.zip'  # Remote url to package (needs to be zip file).
+  #   ubk_win_cli_pkg_product_id   : '{23170F69-40C1-2702-1805-000001000000}'              # Product can be found in "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall" or "HKLM:\SOFTWARE\Wow6432Node\M$
+  #   ubk_win_cli_pkg_installer    : '{{ pkg_repo_local }}\7z1805-x64.msi'                 # Executable for the installation.
+  #   ubk_win_cli_pkg_arguments    : '/qn'                                                 # Additional Arguments for a silent installation.
+  #
+  ubk_win_cli_state            : 'disabled'
+  ubk_win_cli_pkg_name         : 'urbackup-client'
+  ubk_win_cli_pkg_arch         : ''
+  ubk_win_cli_pkg_repo_local   : 'c:\ProgramData\ansible\cached\{{ ubk_win_cli_pkg_name }}'
+  ubk_win_cli_pkg_repo_remote  : 'https://hndl.urbackup.org/Client/2.3.4/UrBackup%20Client%202.3.4.exe'
+  ubk_win_cli_pkg_product_id   : 'UrBackup'
+  ubk_win_cli_pkg_installer    : '{{ ubk_win_cli_pkg_repo_local }}\UrBackup Client 2.3.4.exe'
+  ubk_win_cli_pkg_arguments    : '/S'

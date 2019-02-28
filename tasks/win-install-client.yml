@@ -1,0 +1,32 @@
+---
+  # Title: Urbackup
+  #
+  # Author: bitfinity.nl
+  # File: tasks/win-amd64-client.yml
+  #
+  # Description:
+  #   UrBackup is an easy to setup 
+  #   Open Source client/server backup system.
+
+  - name: "Create local Ansible repository"
+    win_file:
+      path: "{{ ubk_win_cli_pkg_repo_local }}"
+      state: directory
+  
+  - name: "Download Package"
+    win_get_url:
+      url: "{{ ubk_win_cli_pkg_repo_remote }}"
+      dest: "{{ ubk_win_cli_pkg_installer }}"
+      force: no 
+  
+  - name: "Installing {{ ubk_win_cli_pkg_name }}"
+    win_package:
+      path: "{{ ubk_win_cli_pkg_installer }}"
+      product_id: "{{ ubk_win_cli_pkg_product_id }}"
+      arguments: "{{ ubk_win_cli_pkg_arguments }}"
+      state: present
+
+  - name: "Removing installation files"
+    win_file:
+      path: "{{ ubk_win_cli_pkg_repo_local }}"
+      state: absent 

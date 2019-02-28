@@ -5,7 +5,8 @@
   # File: tasks/ubt-1804-amd64-client.yml
   #
   # Description:
-  #   Backup server
+  #   UrBackup is an easy to setup 
+  #   Open Source client/server backup system.
 
   - name: "Check if urbackup client already is installed"
     stat:

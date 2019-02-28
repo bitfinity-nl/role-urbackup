@@ -1,0 +1,23 @@
+---
+  # Title: Urbackup
+  #
+  # Author: bitfinity.nl
+  # File: tasks/win-amd64-client.yml
+  #
+  # Description:
+  #   UrBackup is an easy to setup 
+  #   Open Source client/server backup system.
+
+  - name: "Check if package is already installed before downloading installation files. (64bit)"
+    win_reg_stat:
+      path: 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{{ ubk_win_cli_pkg_product_id }}'
+    register: pkg_isinstalled
+
+  - name: "Print if app is installed"
+    debug:
+      msg: "{{ pkg_isinstalled.exists }}"
+
+  - name: "import tasks/install"
+    import_tasks: win-install-client.yml
+    when:
+      - pkg_isinstalled.exists == false

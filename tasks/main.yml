@@ -5,7 +5,8 @@
   # File: tasks/main.yml
   #
   # Description:
-  #   Backup server
+  #   UrBackup is an easy to setup 
+  #   Open Source client/server backup system.
 
   - name: "Type:Server, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
     import_tasks: ubt-1804-amd64-server.yml
@@ -21,9 +22,17 @@
       - ansible_architecture == 'x86_64'
       - ubk_ubt_cli_state == 'enabled'
 
- # - name: "Type:Client, For OS: Windows, Arch: amd64, State: Enabled"
- #   import_tasks: win-amd64-agent.yml
- #   when:
- #     - ansible_distribution_version == '18.04'
- #     - ansible_architecture == 'x86_64'
- #     - ubk_ubt_cli_state == 'enabled'
+  - name: "Type:Client, For OS: Windows, Arch: 64-bit, State: Enabled"
+    import_tasks: win-64bit-client.yml
+    when:
+      - ansible_os_family == 'Windows'
+      - ansible_architecture == '64-bit'
+      - ubk_win_cli_state == 'enabled'
+
+  - name: "Type:Client, For OS: Windows, Arch: 32-bit, State: Enabled"
+    import_tasks: win-64bit-client.yml
+    when:
+      - ansible_os_family == 'Windows'
+      - ansible_architecture == '32-bit'
+      - ubk_win_cli_state == 'enabled'
+
