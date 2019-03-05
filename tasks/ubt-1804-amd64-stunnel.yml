@@ -1,0 +1,54 @@
+---
+  # Title: Urbackup
+  #
+  # Author: bitfinity.nl
+  # File: tasks/ubt-1804-amd64.stunnel.yml
+  #
+  # Description:
+  #   Backup server
+  #
+  # Sources:
+  #   https://raiyanlive.wordpress.com/2017/08/21/set-up-ssl-tunnel-using-stunnel-on-ubuntu/
+
+  - name: "Install packages"
+    apt:
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
+    vars:
+      packages:
+      - stunnel4
+      - urbackup-server
+
+  - name: "Transfer templates ot {{ ansible_host }}" 
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+    with_items: 
+      - { src: 'stunnel/stunnel.conf.j2', dest: '/etc/stunnel/stunnel.conf' }
+
+  - name: "Load stunnel *.conf files on startup"
+    lineinfile: 
+      path: /etc/default/stunnel4
+      regexp: "ENABLED=0"
+      line: "ENABLED=1"
+      backup: yes
+
+  - name: "Create SSL Certificate"
+    shell: "cat {{ ubk_ubt_srv_cert_key_file }} {{ ubk_ubt_srv_cert_file }} >> /etc/stunnel/stunnel.pem"
+ 
+  - name: "Restart stunnel"
+    systemd:
+      name: stunnel4
+      state: restarted      
+
+  - name: "ufw allow traffic on specific ports"
+    ufw:
+      rule: allow
+      direction: "{{ item.dir }}"
+      port: "{{ item.port }}"
+      proto: "{{ item.proto }}"
+    with_items:
+      - { dir: 'in', port: '443', proto: 'tcp' }  
+
+    
