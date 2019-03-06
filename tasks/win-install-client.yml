@@ -30,3 +30,16 @@
     win_file:
       path: "{{ ubk_win_cli_pkg_repo_local }}"
       state: absent 
+
+ - name: "Configure Windows Firewall for UrBackup"
+   win_firewall_rule:
+     name: Zabbix Passive (10050)
+     localport: "{{ item.port }}"
+     action: allow
+     direction: "{{ item.dir }}"
+     protocol: "{{ item.proto }}"
+     state: present
+   with_items:
+     - { dir: 'in', port: '35621', proto: 'tcp' }
+     - { dir: 'in', port: '35622', proto: 'udp' }
+     - { dir: 'in', port: '35623', proto: 'tcp' }
