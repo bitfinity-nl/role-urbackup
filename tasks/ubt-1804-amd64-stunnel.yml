@@ -5,7 +5,8 @@
   # File: tasks/ubt-1804-amd64.stunnel.yml
   #
   # Description:
-  #   Backup server
+  #   UrBackup is an easy to setup 
+  #   Open Source client/server backup system.
   #
   # Sources:
   #   https://raiyanlive.wordpress.com/2017/08/21/set-up-ssl-tunnel-using-stunnel-on-ubuntu/

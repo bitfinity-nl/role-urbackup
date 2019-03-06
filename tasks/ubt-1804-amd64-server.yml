@@ -5,7 +5,8 @@
   # File: defaults/ubt-1804-amd64-enabled.yml
   #
   # Description:
-  #   Backup server
+  #   UrBackup is an easy to setup 
+  #   Open Source client/server backup system.
 
   - name: "Create directory structure"
     file:

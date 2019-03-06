@@ -8,7 +8,7 @@ This role is designed for deploying an open source disk-2-disk back-up solution 
 This role contains:
 * Urbackup server
 * Urbackup client for Ubuntu
-* Urbackup Client for Windows (Coming soon)
+* Urbackup Client for Windows
 
 Requirements
 ------------
@@ -30,7 +30,6 @@ Dependencies
 
 For using https on the server, you can use an selfsigned certificate by using the role app-cert-selfsigned.
 
-* https://github.com/bitfinity-nl/srv-apache2
 * https://github.com/bitfinity-nl/app-cert-selfsigned
 
 
@@ -46,8 +45,19 @@ Example Playbook: Server at the bare minimum with client.
         ubk_ubt_cli_state           : 'enabled'
 
        roles:
-        - srv-urbackup         
+        - role-urbackup         
 
+Example Playbook: Server at the bare minimum with client.
+---------------------------------------------------------
+    - hosts: ubuntu-client01
+      become: true
+
+      vars:
+        # -- custom settings: role-urbackup --
+        ubk_ubt_cli_state          : 'enabled'
+
+      roles:
+        - role-urbackup
 
 Example Playbook: Server with selfselfsigned certificate with client. 
 ---------------------------------------------------------------------
@@ -71,11 +81,6 @@ Example Playbook: Server with selfselfsigned certificate with client.
         cert_comname                : '{{ ansible_hostname }}'
         cert_email                  : 'support@example.com'      
 
-        # -- custom settings: srv-apache2 --
-        ap_sslcertificatefile       : '{{ cert_base_path }}/certs/{{ ansible_hostname }}/certificate-selfs$
-        ap_sslcertificatekeyfile    : '{{ cert_base_path }}/private/{{ ansible_hostname }}/private-selfsig$
-        ap_sslcertificatechainfile  : '{{ cert_base_path }}/private/{{ ansible_hostname }}/private-selfsig$
-
         # -- custom settings: utl-urbackup --
         ubk_ubt_srv_state           : 'enabled'
         ubk_ubt_srv_cert_state      : 'enabled'       
@@ -86,8 +91,7 @@ Example Playbook: Server with selfselfsigned certificate with client.
       
       roles:
         - app-cert-selfsigned
-        - srv-apache2
-        - srv-urbackup
+        - role-urbackup
          
 
 

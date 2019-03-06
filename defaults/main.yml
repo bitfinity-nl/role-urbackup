@@ -5,7 +5,8 @@
   # File: defaults/main.yml
   #
   # Description:
-  #   Backup server
+  #   UrBackup is an easy to setup 
+  #   Open Source client/server backup system.
 
   # -- Backup server setting --
   #

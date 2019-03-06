@@ -2,7 +2,7 @@
   # Title: Urbackup
   #
   # Author: bitfinity.nl
-  # File: tasks/win-amd64-client.yml
+  # File: tasks/win-install-client.yml
   #
   # Description:
   #   UrBackup is an easy to setup 
