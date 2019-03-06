@@ -17,6 +17,13 @@
     debug:
       msg: "{{ urbackup_isinstalled.stat.exists }}"
 
+  - name: "Stop systemservice urbackupclient if already is installed"
+    systemd:
+      name: urbackupclientbackend
+      state: stopped
+    when:
+      - urbackup_isinstalled.stat.exists == true
+    
   - name: "Remove previous sources"
     file:
       path: /tmp/urbackup-client
@@ -61,8 +68,13 @@
       owner: root
       group: root
       mode: 0755
-    notify: enable_start_ubt_urbackupclient
 
+  - name: "Enable and start systemservice urbackupclient"
+    systemd:
+       name: urbackupclientbackend
+       state: started
+       enabled: yes
+  
   - name: "Set snapshot mechanism to nosnapshot"
     file:
       path: /usr/local/etc/urbackup/snapshot.cfg
