@@ -1,0 +1,22 @@
+description "urbackup client backend"
+author      "bitfinity-nl"
+
+start on filesystem or runlevel [2345]
+stop on shutdown
+
+script
+
+    export HOME="/usr/local/sbin/"
+    echo $$ > /var/run/urbackupclient.pid
+    exec /usr/local/sbin/urbackupclientbackend --config /etc/default/urbackupclient --no-consoletime
+
+end script
+
+pre-start script
+    echo "[`date`] Node Test Starting" >> /var/log/urbackupclient.log
+end script
+
+pre-stop script
+    rm /var/run/urbackupclient.pid
+    echo "[`date`] Node Test Stopping" >> /var/log/urbackupclient.log
+end script

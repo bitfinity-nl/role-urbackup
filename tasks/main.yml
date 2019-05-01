@@ -29,6 +29,13 @@
       - ansible_architecture == 'x86_64'
       - ubk_ubt_cli_state == 'enabled'
 
+  - name: "Type:Client, For OS: Ubuntu 14.04LTS, Arch: amd64, State: Enabled"
+    import_tasks: ubt-1404-amd64-client.yml
+    when:
+      - ansible_distribution_version == '14.04'
+      - ansible_architecture == 'x86_64'
+      - ubk_ubt_cli_state == 'enabled'
+
   - name: "Type:Client, For OS: Windows, Arch: 64-bit, State: Enabled"
     import_tasks: win-64bit-client.yml
     when:

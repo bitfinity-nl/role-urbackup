@@ -1,0 +1,159 @@
+---
+  # Title: Urbackup Ubuntu 18.04LTS Client
+  #
+  # Author: bitfinity.nl
+  # File: tasks/ubt-1804-amd64-client.yml
+  #
+  # Description:
+  #   UrBackup is an easy to setup 
+  #   Open Source client/server backup system.
+
+  - name: "Check if urbackup client already is installed"
+    stat:
+      path: /usr/local/bin/urbackupclientctl
+    register: urbackup_isinstalled
+
+  - name: "Print to screen if client is allready installed"
+    debug:
+      msg: "{{ urbackup_isinstalled.stat.exists }}"
+
+  - name: "Stop systemservice urbackupclient if already is installed"
+    service:
+      name: urbackupclientbackend
+      state: stopped
+    when:
+      - urbackup_isinstalled.stat.exists == true
+    
+  - name: "Remove previous sources"
+    file:
+      path: /tmp/urbackup-client
+      state: absent
+
+  - name: "Install packages"
+    apt:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - build-essential
+      - g++
+      - libwxgtk3.0-dev
+      - libcrypto++-dev
+      - libz-dev
+
+  - name: "Download client source"
+    unarchive:
+      src: "{{ ubk_ubt_cli_src }}"
+      dest: /tmp/
+      remote_src: yes
+
+  - name: "Change directory"
+    shell: mv /tmp/urbackup-client-* /tmp/urbackup-client
+
+  - name: "Transfer template to /tmp/urbackup-client"
+    template:
+      src: ubt-1804-client/build.sh.j2
+      dest: "/tmp/urbackup-client/build.sh"
+      owner: root
+      group: root
+      mode: 0755
+  
+  - name: "Execute /tmp/urbackup-client/build.sh/build.sh script"
+    command: /tmp/urbackup-client/build.sh
+
+  - name: "Create upstart service"
+    template:
+      src: ubt-1404-client/urbackupclientbackend.conf.j2
+      dest: /etc/init/urbackupclientbackend.conf
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: "Enable and start systemservice urbackupclient"
+    service:
+       name: urbackupclientbackend
+       state: started
+       enabled: yes
+ 
+  - name: "Set snapshot mechanism to nosnapshot"
+    file:
+      path: /usr/local/etc/urbackup/snapshot.cfg
+      state: absent
+    when:
+      - ubk_ubt_cli_snapshot_mech == "nosnapshot"
+
+  - name: "Set snapshot mechanism to {{ ubk_ubt_cli_snapshot_mech }}"
+    template:
+      src: ubt-1804-client/snapshot.cfg.j2
+      dest: /usr/local/etc/urbackup/snapshot.cfg
+      owner: root
+      group: root
+      mode: 0600
+    when:
+      - ubk_ubt_cli_snapshot_mech == "lvm"
+    
+  - name: "Transfer snapshot scripts to dir /usr/local/share/urbackup/ on {{ ansible_hostname }}"
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0755
+    with_items:
+      - { src: 'ubt-1804-client/filesystem_snapshot_common.j2', dest: '/usr/local/share/urbackup/filesystem_snapshot_common' }
+      - { src: 'ubt-1804-client/btrfs_create_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/btrfs_create_filesystem_snapshot' }
+      - { src: 'ubt-1804-client/btrfs_remove_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/btrfs_remove_filesystem_snapshot' }
+      - { src: 'ubt-1804-client/dattobd_create_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/dattobd_create_filesystem_snapshot' }
+      - { src: 'ubt-1804-client/dattobd_remove_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/dattobd_remove_filesystem_snapshot' }
+      - { src: 'ubt-1804-client/lvm_create_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/lvm_create_filesystem_snapshot' } 
+      - { src: 'ubt-1804-client/lvm_remove_filesystem_snapshot.j2', dest: '/usr/local/share/urbackup/lvm_remove_filesystem_snapshot' }
+
+  - name: "Remove all backupdirectories from backuplist when urbackupclient is allready installed"
+    command: "/usr/local/bin/urbackupclientctl remove-backupdir -d {{ item.src }}"
+    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+    ignore_errors: yes
+    when:
+      - urbackup_isinstalled.stat.exists == true
+
+  - name: "Add directories to backuplist with snapshot mechanism btrfs"
+    command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
+    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+    when: 
+      - ubk_ubt_cli_snapshot_mech == 'btrfs' and item.snapshot == 'true'
+
+  - name: "Add directories to backuplist with snapshot mechanism dattodb"
+    command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
+    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+    when: 
+      - ubk_ubt_cli_snapshot_mech == 'dattodb' and item.snapshot == 'true'
+
+  - name: "Add directories to backuplist with snapshot mechanism lvm"
+    command: "/usr/local/bin/urbackupclientctl add-backupdir -s -d {{ item.src }}"
+    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+    when: 
+      - ubk_ubt_cli_snapshot_mech == 'lvm' and item.snapshot == 'true'
+
+  - name: "Add directories to backuplist without snapshot"
+    command: "/usr/local/bin/urbackupclientctl add-backupdir -d {{ item.src }}"
+    with_items: "{{ ubk_ubt_cli_backupdirs }}"
+    when: 
+      - ubk_ubt_cli_snapshot_mech == 'nosnapshot' and item.snapshot == 'false' or
+        ubk_ubt_cli_snapshot_mech == 'btrfs' and item.snapshot == 'false' or
+        ubk_ubt_cli_snapshot_mech == 'dattodb' and item.snapshot == 'false' or
+        ubk_ubt_cli_snapshot_mech == 'lvm' and item.snapshot == 'false'
+
+  - name: "Cleanup temporary directory"
+    file:
+      path: /tmp/urbackup-client
+      state: absent
+
+  - name: "ufw allow traffic on specific ports"
+    ufw:
+      rule: allow
+      direction: "{{ item.dir }}"
+      port: "{{ item.port }}"
+      proto: "{{ item.proto }}"
+    with_items:
+      - { dir: 'in', port: '35621', proto: 'tcp' }
+      - { dir: 'in', port: '35622', proto: 'udp' }
+      - { dir: 'in', port: '35623', proto: 'tcp' }

@@ -7,7 +7,7 @@ This role is designed for deploying an open source disk-2-disk back-up solution 
 
 This role contains:
 * Urbackup server
-* Urbackup client for Ubuntu
+* Urbackup client for Ubuntu (14.04, 16.04, 18.04)
 * Urbackup Client for Windows
 
 Requirements
