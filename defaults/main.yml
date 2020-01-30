@@ -24,7 +24,7 @@
   ubk_ubt_srv_cert_file       : '{{ ap_sslcertificatefile }}'
   ubk_ubt_srv_cert_key_file   : '{{ ap_sslcertificatekeyfile }}'
   ubk_ubt_srv_cert_chain_file : '{{ ap_sslcertificatechainfile }}'
-  ubk_ubt_srv_backup_path     : '/media/BACKUP/urbackup/'
+  ubk_ubt_srv_backup_path     : '/mnt/BACKUP/urbackup/'
   
   # -- UrBackup Ubuntu Client settings --
   #
