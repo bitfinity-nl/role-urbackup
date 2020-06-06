@@ -40,11 +40,13 @@
   #   - uninstall before adding new paths: /usr/local/sbin/uninstall_urbackupclient
   #     
   ubk_ubt_cli_state          : 'disabled'
-  ubk_ubt_cli_src            : 'https://hndl.urbackup.org/Client/2.3.4/urbackup-client-2.3.4.tar.gz'
+  ubk_ubt_cli_src            : 'https://hndl.urbackup.org/Client/2.4.10/urbackup-client-2.4.10.tar.gz'
   ubk_ubt_cli_snapshot_mech  : 'nosnapshot'
   ubk_ubt_cli_backupdirs     : 
-    - { snapshot: 'false', src: '/opt' }
-    - { snapshot: 'false', src: '/home' } 
+    - { snapshot: 'true', src: '/opt' }
+    - { snapshot: 'true', src: '/etc' }
+    - { snapshot: 'true', src: '/home' }
+    - { snapshot: 'true', src: '/var/www' } 
 
 
   # -- UrBackup Windows Client settings --
@@ -63,7 +65,7 @@
   ubk_win_cli_pkg_name         : 'urbackup-client'
   ubk_win_cli_pkg_arch         : ''
   ubk_win_cli_pkg_repo_local   : 'c:\ProgramData\ansible\cached\{{ ubk_win_cli_pkg_name }}'
-  ubk_win_cli_pkg_repo_remote  : 'https://hndl.urbackup.org/Client/2.3.4/UrBackup%20Client%202.3.4.exe'
+  ubk_win_cli_pkg_repo_remote  : 'https://hndl.urbackup.org/Client/2.4.10/UrBackup%20Client%202.4.10.exe'
   ubk_win_cli_pkg_product_id   : 'UrBackup'
-  ubk_win_cli_pkg_installer    : '{{ ubk_win_cli_pkg_repo_local }}\UrBackup Client 2.3.4.exe'
+  ubk_win_cli_pkg_installer    : '{{ ubk_win_cli_pkg_repo_local }}\UrBackup Client 2.4.10.exe'
   ubk_win_cli_pkg_arguments    : '/S'
