@@ -43,10 +43,10 @@
   ubk_ubt_cli_src            : 'https://hndl.urbackup.org/Client/2.4.10/urbackup-client-2.4.10.tar.gz'
   ubk_ubt_cli_snapshot_mech  : 'nosnapshot'
   ubk_ubt_cli_backupdirs     : 
-    - { snapshot: 'true', src: '/opt' }
-    - { snapshot: 'true', src: '/etc' }
-    - { snapshot: 'true', src: '/home' }
-    - { snapshot: 'true', src: '/var/www' } 
+    - { snapshot: 'false', src: '/opt' }
+    - { snapshot: 'false', src: '/etc' }
+    - { snapshot: 'false', src: '/home' }
+    - { snapshot: 'false', src: '/var/www' } 
 
 
   # -- UrBackup Windows Client settings --
