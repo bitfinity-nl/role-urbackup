@@ -11,7 +11,7 @@
 - name: "Type:Server, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
   import_tasks: ubt-generic-amd64-server.yml
   when:
-    - ansible_distribution_version == '18.04'
+#    - ansible_distribution_version == '18.04'
     - ansible_architecture == 'x86_64'
     - ubk_ubt_srv_state == 'enabled'
 
