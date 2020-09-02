@@ -1,59 +1,59 @@
 ---
-  # Title: Urbackup
-  #
-  # Author: bitfinity.nl
-  # File: tasks/main.yml
-  #
-  # Description:
-  #   UrBackup is an easy to setup 
-  #   Open Source client/server backup system.
+# Title: Urbackup
+#
+# Author: bitfinity.nl
+# File: tasks/main.yml
+#
+# Description:
+#   UrBackup is an easy to setup 
+#   Open Source client/server backup system.
 
-  - name: "Type:Server, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
-    import_tasks: ubt-1804-amd64-server.yml
-    when:
-      - ansible_distribution_version == '18.04'
-      - ansible_architecture == 'x86_64'
-      - ubk_ubt_srv_state == 'enabled'
+- name: "Type:Server, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
+  import_tasks: ubt-generic-amd64-server.yml
+  when:
+    - ansible_distribution_version == '18.04'
+    - ansible_architecture == 'x86_64'
+    - ubk_ubt_srv_state == 'enabled'
 
-  - name: "Type:Stunnel, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
-    import_tasks: ubt-1804-amd64-stunnel.yml
-    when:
-      - ansible_distribution_version == '18.04'
-      - ansible_architecture == 'x86_64'
-      - ubk_ubt_srv_cert_state == 'enabled'
+- name: "Type:Stunnel, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
+  import_tasks: ubt-1804-amd64-stunnel.yml
+  when:
+    - ansible_distribution_version == '18.04'
+    - ansible_architecture == 'x86_64'
+    - ubk_ubt_srv_cert_state == 'enabled'
   
-  - name: "Type:Client, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
-    import_tasks: ubt-1804-amd64-client.yml
-    when:
-      - ansible_distribution_version == '18.04'
-      - ansible_architecture == 'x86_64'
-      - ubk_ubt_cli_state == 'enabled'
+- name: "Type:Client, For OS: Ubuntu 18.04LTS, Arch: amd64, State: Enabled"
+  import_tasks: ubt-1804-amd64-client.yml
+  when:
+    - ansible_distribution_version == '18.04'
+    - ansible_architecture == 'x86_64'
+    - ubk_ubt_cli_state == 'enabled'
 
-  - name: "Type:Client, For OS: Ubuntu 16.04LTS, Arch: amd64, State: Enabled"
-    import_tasks: ubt-1604-amd64-client.yml
-    when:
-      - ansible_distribution_version == '16.04'
-      - ansible_architecture == 'x86_64'
-      - ubk_ubt_cli_state == 'enabled'
+- name: "Type:Client, For OS: Ubuntu 16.04LTS, Arch: amd64, State: Enabled"
+  import_tasks: ubt-1604-amd64-client.yml
+  when:
+    - ansible_distribution_version == '16.04'
+    - ansible_architecture == 'x86_64'
+    - ubk_ubt_cli_state == 'enabled'
 
-  - name: "Type:Client, For OS: Ubuntu 14.04LTS, Arch: amd64, State: Enabled"
-    import_tasks: ubt-1404-amd64-client.yml
-    when:
-      - ansible_distribution_version == '14.04'
-      - ansible_architecture == 'x86_64'
-      - ubk_ubt_cli_state == 'enabled'
+- name: "Type:Client, For OS: Ubuntu 14.04LTS, Arch: amd64, State: Enabled"
+  import_tasks: ubt-1404-amd64-client.yml
+  when:
+    - ansible_distribution_version == '14.04'
+    - ansible_architecture == 'x86_64'
+    - ubk_ubt_cli_state == 'enabled'
 
-  - name: "Type:Client, For OS: Windows, Arch: 64-bit, State: Enabled"
-    import_tasks: win-64bit-client.yml
-    when:
-      - ansible_os_family == 'Windows'
-      - ansible_architecture == '64-bit'
-      - ubk_win_cli_state == 'enabled'
+- name: "Type:Client, For OS: Windows, Arch: 64-bit, State: Enabled"
+  import_tasks: win-64bit-client.yml
+  when:
+    - ansible_os_family == 'Windows'
+    - ansible_architecture == '64-bit'
+    - ubk_win_cli_state == 'enabled'
 
-  - name: "Type:Client, For OS: Windows, Arch: 32-bit, State: Enabled"
-    import_tasks: win-64bit-client.yml
-    when:
-      - ansible_os_family == 'Windows'
-      - ansible_architecture == '32-bit'
-      - ubk_win_cli_state == 'enabled'
+- name: "Type:Client, For OS: Windows, Arch: 32-bit, State: Enabled"
+  import_tasks: win-64bit-client.yml
+  when:
+    - ansible_os_family == 'Windows'
+    - ansible_architecture == '32-bit'
+    - ubk_win_cli_state == 'enabled'
 
