@@ -2,7 +2,11 @@
 # Title: Urbackup
 #
 # Author: bitfinity.nl
-# File: defaults/ubt-1804-amd64-enabled.yml
+# File: defaults/ubt-generic-amd64-enabled.yml
+#
+# Support on:
+#   - Ubuntu 20.04
+#   - Ubuntu 18.04
 #
 # Description:
 #   UrBackup is an easy to setup 
@@ -18,7 +22,7 @@
 - name: "Add repository"
   apt_repository:
     repo: ppa:uroni/urbackup
-    state: present
+    state: latest
 
 - name: "Install packages"
   apt:
