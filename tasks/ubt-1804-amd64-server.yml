@@ -1,42 +1,42 @@
 ---
-  # Title: Urbackup
-  #
-  # Author: bitfinity.nl
-  # File: defaults/ubt-1804-amd64-enabled.yml
-  #
-  # Description:
-  #   UrBackup is an easy to setup 
-  #   Open Source client/server backup system.
+# Title: Urbackup
+#
+# Author: bitfinity.nl
+# File: defaults/ubt-1804-amd64-enabled.yml
+#
+# Description:
+#   UrBackup is an easy to setup 
+#   Open Source client/server backup system.
 
-  - name: "Create directory structure"
-    file:
-      path: "{{ item }}"
-      state: directory
-    with_items:
-      - "{{ ubk_ubt_srv_backup_path }}"
+- name: "Create directory structure"
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ ubk_ubt_srv_backup_path }}"
 
-  - name: "Add repository"
-    apt_repository:
-      repo: ppa:uroni/urbackup
-      state: present
+- name: "Add repository"
+  apt_repository:
+    repo: ppa:uroni/urbackup
+    state: present
 
-  - name: "Install packages"
-    apt:
-      name: "{{ packages }}"
-      state: present
-      update_cache: yes
-    vars:
-      packages:
-      - urbackup-server
+- name: "Install packages"
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - urbackup-server
 
-  - name: "ufw allow traffic on specific ports"
-    ufw:
-      rule: allow
-      direction: "{{ item.dir }}"
-      port: "{{ item.port }}"
-      proto: "{{ item.proto }}"
-    with_items:
-      - { dir: 'in', port: '55415', proto: 'tcp' }
-      - { dir: 'out', port: '35623', proto: 'udp' }
-      - { dir: 'in', port: '55413', proto: 'tcp' }
-      - { dir: 'in', port: '55414', proto: 'tcp' }
+- name: "ufw allow traffic on specific ports"
+  ufw:
+    rule: allow
+    direction: "{{ item.dir }}"
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  with_items:
+    - { dir: 'in', port: '55415', proto: 'tcp' }
+    - { dir: 'out', port: '35623', proto: 'udp' }
+    - { dir: 'in', port: '55413', proto: 'tcp' }
+    - { dir: 'in', port: '55414', proto: 'tcp' }
